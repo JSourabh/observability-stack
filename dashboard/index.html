@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Observability Control</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --text: #1d2430;
+      --muted: #687385;
+      --line: #dfe4ea;
+      --ok: #16784a;
+      --ok-soft: #e8f6ef;
+      --bad: #b42318;
+      --bad-soft: #fff0ee;
+      --wait: #9a5b00;
+      --wait-soft: #fff5df;
+      --accent: #1264a3;
+      --accent-soft: #e8f2fb;
+      --shadow: 0 10px 28px rgba(29, 36, 48, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.15;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .subhead {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button,
+    .link-button {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel);
+      color: var(--text);
+      padding: 0 12px;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    button:hover,
+    .link-button:hover {
+      border-color: #b9c4d1;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      min-height: 88px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 24px;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      min-height: 238px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      background: var(--accent-soft);
+      color: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .service-meta {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      word-break: break-word;
+    }
+
+    .status {
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+
+    .status.up {
+      color: var(--ok);
+      background: var(--ok-soft);
+      border-color: #bde5cf;
+    }
+
+    .status.down {
+      color: var(--bad);
+      background: var(--bad-soft);
+      border-color: #ffd1cb;
+    }
+
+    .status.checking {
+      color: var(--wait);
+      background: var(--wait-soft);
+      border-color: #ffdfa1;
+    }
+
+    .details {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .detail {
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 10px;
+      min-height: 64px;
+      overflow: hidden;
+    }
+
+    .detail span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .detail strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 860px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+      }
+
+      .summary,
+      .services {
+        grid-template-columns: 1fr;
+      }
+
+      .details {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <h1>Observability Control</h1>
+        <p class="subhead">Live status and launch panel for this local stack.</p>
+      </div>
+      <div class="toolbar">
+        <button class="primary" id="refresh" type="button">Refresh</button>
+        <button id="toggleAuto" type="button">Pause Auto</button>
+      </div>
+    </header>
+
+    <section class="summary" aria-label="Stack summary">
+      <div class="metric">
+        <span>Services Up</span>
+        <strong id="upCount">0/4</strong>
+      </div>
+      <div class="metric">
+        <span>Average Check</span>
+        <strong id="avgLatency">--</strong>
+      </div>
+      <div class="metric">
+        <span>Last Refresh</span>
+        <strong id="lastRefresh">--</strong>
+      </div>
+      <div class="metric">
+        <span>Auto Refresh</span>
+        <strong id="autoState">On</strong>
+      </div>
+    </section>
+
+    <section class="services" id="services" aria-label="Services"></section>
+
+    <p class="footer-note">Prometheus uses host port 9091 because 9090 is already occupied on this machine.</p>
+  </main>
+
+  <script>
+    const services = [
+      {
+        id: "prometheus",
+        name: "Prometheus",
+        mark: "P",
+        port: "localhost:9091",
+        statusUrl: "/status/prometheus",
+        openUrl: "http://localhost:9091",
+        expected: "Prometheus Server is Ready."
+      },
+      {
+        id: "grafana",
+        name: "Grafana",
+        mark: "G",
+        port: "localhost:3000",
+        statusUrl: "/status/grafana",
+        openUrl: "http://localhost:3000",
+        expected: "database"
+      },
+      {
+        id: "loki",
+        name: "Loki",
+        mark: "L",
+        port: "localhost:3100",
+        statusUrl: "/status/loki",
+        openUrl: "http://localhost:3100/ready",
+        expected: "ready"
+      },
+      {
+        id: "otel",
+        name: "Otel Collector",
+        mark: "O",
+        port: "localhost:4317 / 4318",
+        statusUrl: "/status/otel",
+        openUrl: "http://localhost:4318",
+        expected: ""
+      }
+    ];
+
+    const state = new Map();
+    let autoRefresh = true;
+    let timer = null;
+
+    const servicesEl = document.getElementById("services");
+    const upCountEl = document.getElementById("upCount");
+    const avgLatencyEl = document.getElementById("avgLatency");
+    const lastRefreshEl = document.getElementById("lastRefresh");
+    const autoStateEl = document.getElementById("autoState");
+    const refreshButton = document.getElementById("refresh");
+    const toggleAutoButton = document.getElementById("toggleAuto");
+
+    function renderCards() {
+      servicesEl.innerHTML = services.map((service) => `
+        <article class="card" id="card-${service.id}">
+          <div class="card-head">
+            <div class="title-row">
+              <div class="mark">${service.mark}</div>
+              <div>
+                <h2>${service.name}</h2>
+                <p class="service-meta">${service.port}</p>
+              </div>
+            </div>
+            <span class="status checking" id="status-${service.id}">Checking</span>
+          </div>
+
+          <div class="details">
+            <div class="detail">
+              <span>Last Check</span>
+              <strong id="checked-${service.id}">--</strong>
+            </div>
+            <div class="detail">
+              <span>Latency</span>
+              <strong id="latency-${service.id}">--</strong>
+            </div>
+            <div class="detail">
+              <span>Result</span>
+              <strong id="result-${service.id}">Pending</strong>
+            </div>
+          </div>
+
+          <div class="actions">
+            <a class="link-button" href="${service.openUrl}" target="_blank" rel="noreferrer">Open</a>
+            <button type="button" data-refresh="${service.id}">Check</button>
+            <button type="button" data-copy="${service.port}">Copy Endpoint</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function labelTime(date) {
+      return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    }
+
+    function setServiceState(service, next) {
+      state.set(service.id, next);
+
+      const statusEl = document.getElementById(`status-${service.id}`);
+      const checkedEl = document.getElementById(`checked-${service.id}`);
+      const latencyEl = document.getElementById(`latency-${service.id}`);
+      const resultEl = document.getElementById(`result-${service.id}`);
+
+      statusEl.className = `status ${next.ok ? "up" : "down"}`;
+      statusEl.textContent = next.ok ? "Up" : "Down";
+      checkedEl.textContent = labelTime(next.checkedAt);
+      latencyEl.textContent = `${next.latency} ms`;
+      resultEl.textContent = next.message;
+      refreshSummary();
+    }
+
+    function setChecking(service) {
+      const statusEl = document.getElementById(`status-${service.id}`);
+      const resultEl = document.getElementById(`result-${service.id}`);
+      statusEl.className = "status checking";
+      statusEl.textContent = "Checking";
+      resultEl.textContent = "Checking";
+    }
+
+    async function checkService(service) {
+      setChecking(service);
+      const started = performance.now();
+
+      try {
+        const response = await fetch(`${service.statusUrl}?t=${Date.now()}`, { cache: "no-store" });
+        const text = await response.text();
+        const latency = Math.round(performance.now() - started);
+        const normalized = text.trim();
+        const ok = response.ok && (!service.expected || normalized.includes(service.expected));
+
+        setServiceState(service, {
+          ok,
+          latency,
+          checkedAt: new Date(),
+          message: ok ? "Healthy" : `HTTP ${response.status}`
+        });
+      } catch (error) {
+        setServiceState(service, {
+          ok: false,
+          latency: Math.round(performance.now() - started),
+          checkedAt: new Date(),
+          message: "Unavailable"
+        });
+      }
+    }
+
+    async function refreshAll() {
+      await Promise.all(services.map(checkService));
+      lastRefreshEl.textContent = labelTime(new Date());
+    }
+
+    function refreshSummary() {
+      const values = Array.from(state.values());
+      const up = values.filter((item) => item.ok).length;
+      const latencies = values.map((item) => item.latency).filter(Number.isFinite);
+      const avg = latencies.length ? Math.round(latencies.reduce((sum, value) => sum + value, 0) / latencies.length) : null;
+
+      upCountEl.textContent = `${up}/${services.length}`;
+      avgLatencyEl.textContent = avg === null ? "--" : `${avg} ms`;
+      autoStateEl.textContent = autoRefresh ? "On" : "Off";
+      toggleAutoButton.textContent = autoRefresh ? "Pause Auto" : "Resume Auto";
+    }
+
+    function startTimer() {
+      clearInterval(timer);
+      if (autoRefresh) {
+        timer = setInterval(refreshAll, 5000);
+      }
+      refreshSummary();
+    }
+
+    servicesEl.addEventListener("click", async (event) => {
+      const refreshId = event.target.dataset.refresh;
+      const copyValue = event.target.dataset.copy;
+
+      if (refreshId) {
+        const service = services.find((item) => item.id === refreshId);
+        await checkService(service);
+      }
+
+      if (copyValue) {
+        await navigator.clipboard.writeText(copyValue);
+        event.target.textContent = "Copied";
+        setTimeout(() => {
+          event.target.textContent = "Copy Endpoint";
+        }, 1200);
+      }
+    });
+
+    refreshButton.addEventListener("click", refreshAll);
+    toggleAutoButton.addEventListener("click", () => {
+      autoRefresh = !autoRefresh;
+      startTimer();
+    });
+
+    renderCards();
+    refreshAll();
+    startTimer();
+  </script>
+</body>
+</html>
