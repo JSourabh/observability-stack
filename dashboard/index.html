@@ -6,21 +6,23 @@
   <title>Observability Control</title>
   <style>
     :root {
-      color-scheme: light;
-      --bg: #f6f7f9;
-      --panel: #ffffff;
-      --text: #1d2430;
-      --muted: #687385;
-      --line: #dfe4ea;
-      --ok: #16784a;
-      --ok-soft: #e8f6ef;
-      --bad: #b42318;
-      --bad-soft: #fff0ee;
-      --wait: #9a5b00;
-      --wait-soft: #fff5df;
-      --accent: #1264a3;
-      --accent-soft: #e8f2fb;
-      --shadow: 0 10px 28px rgba(29, 36, 48, 0.08);
+      color-scheme: dark;
+      --bg: #071019;
+      --panel: rgba(12, 24, 38, 0.86);
+      --panel-strong: rgba(17, 34, 52, 0.96);
+      --text: #eaf2ff;
+      --muted: #91a3b8;
+      --line: rgba(151, 172, 198, 0.2);
+      --ok: #30d987;
+      --ok-soft: rgba(48, 217, 135, 0.14);
+      --bad: #ff6464;
+      --bad-soft: rgba(255, 100, 100, 0.15);
+      --wait: #ffc857;
+      --wait-soft: rgba(255, 200, 87, 0.16);
+      --accent: #37a3ff;
+      --accent-2: #a970ff;
+      --accent-3: #17d6c3;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
     }
 
     * {
@@ -30,15 +32,18 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(55, 163, 255, 0.22), transparent 30%),
+        radial-gradient(circle at 82% 0%, rgba(169, 112, 255, 0.18), transparent 28%),
+        linear-gradient(135deg, #06101b 0%, #091826 44%, #0c1721 100%);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     .shell {
-      width: min(1180px, calc(100% - 32px));
+      width: min(1220px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 28px 0;
+      padding: 28px 0 34px;
     }
 
     header {
@@ -46,15 +51,36 @@
       align-items: center;
       justify-content: space-between;
       gap: 20px;
-      padding-bottom: 20px;
+      padding: 22px;
       border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(13, 31, 50, 0.92), rgba(12, 22, 35, 0.74));
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(55, 163, 255, 0.18), transparent 38%),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 42px);
+      pointer-events: none;
+    }
+
+    header > * {
+      position: relative;
+      z-index: 1;
     }
 
     h1 {
       margin: 0;
-      font-size: 30px;
+      font-size: 34px;
       line-height: 1.15;
-      font-weight: 760;
+      font-weight: 800;
       letter-spacing: 0;
     }
 
@@ -62,6 +88,15 @@
       margin: 8px 0 0;
       color: var(--muted);
       font-size: 15px;
+    }
+
+    .eyebrow {
+      color: var(--accent-3);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      text-transform: uppercase;
     }
 
     .toolbar {
@@ -75,9 +110,9 @@
     button,
     .link-button {
       min-height: 38px;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(151, 172, 198, 0.26);
       border-radius: 7px;
-      background: var(--panel);
+      background: rgba(255, 255, 255, 0.06);
       color: var(--text);
       padding: 0 12px;
       font: inherit;
@@ -91,30 +126,43 @@
     }
 
     button.primary {
-      background: var(--accent);
-      border-color: var(--accent);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-color: rgba(255, 255, 255, 0.24);
       color: #ffffff;
+      box-shadow: 0 10px 22px rgba(55, 163, 255, 0.2);
     }
 
     button:hover,
     .link-button:hover {
-      border-color: #b9c4d1;
+      border-color: rgba(255, 255, 255, 0.42);
+      transform: translateY(-1px);
     }
 
     .summary {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
-      margin: 22px 0;
+      margin: 18px 0 16px;
     }
 
     .metric {
-      background: var(--panel);
+      background: linear-gradient(180deg, rgba(18, 36, 55, 0.94), rgba(12, 25, 40, 0.9));
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 14px;
+      padding: 16px;
       box-shadow: var(--shadow);
       min-height: 88px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric::after {
+      content: "";
+      position: absolute;
+      inset: auto 14px 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3), var(--accent-2));
+      border-radius: 99px 99px 0 0;
     }
 
     .metric span {
@@ -126,17 +174,22 @@
     .metric strong {
       display: block;
       margin-top: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       font-size: 24px;
     }
 
     .services {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      gap: 16px;
     }
 
     .card {
-      background: var(--panel);
+      --service: var(--accent);
+      --service-soft: rgba(55, 163, 255, 0.14);
+      background:
+        linear-gradient(180deg, rgba(17, 34, 52, 0.96), rgba(9, 21, 34, 0.96)),
+        var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
       box-shadow: var(--shadow);
@@ -146,6 +199,49 @@
       flex-direction: column;
       justify-content: space-between;
       gap: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--service);
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 92% 14%, var(--service-soft), transparent 32%);
+      pointer-events: none;
+    }
+
+    .card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card.prometheus {
+      --service: #ff7a45;
+      --service-soft: rgba(255, 122, 69, 0.16);
+    }
+
+    .card.grafana {
+      --service: #f7b731;
+      --service-soft: rgba(247, 183, 49, 0.16);
+    }
+
+    .card.loki {
+      --service: #37d67a;
+      --service-soft: rgba(55, 214, 122, 0.15);
+    }
+
+    .card.otel {
+      --service: #8f7cff;
+      --service-soft: rgba(143, 124, 255, 0.17);
     }
 
     .card-head {
@@ -169,9 +265,11 @@
       display: grid;
       place-items: center;
       font-weight: 800;
-      background: var(--accent-soft);
-      color: var(--accent);
+      background: var(--service-soft);
+      color: var(--service);
+      border: 1px solid color-mix(in srgb, var(--service) 42%, transparent);
       flex: 0 0 auto;
+      box-shadow: inset 0 0 18px var(--service-soft);
     }
 
     h2 {
@@ -185,6 +283,7 @@
       color: var(--muted);
       font-size: 13px;
       word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     }
 
     .status {
@@ -194,6 +293,7 @@
       font-weight: 700;
       white-space: nowrap;
       border: 1px solid transparent;
+      box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.04);
     }
 
     .status.up {
@@ -221,11 +321,12 @@
     }
 
     .detail {
-      border: 1px solid var(--line);
+      border: 1px solid rgba(151, 172, 198, 0.18);
       border-radius: 7px;
       padding: 10px;
       min-height: 64px;
       overflow: hidden;
+      background: rgba(255, 255, 255, 0.035);
     }
 
     .detail span {
@@ -239,6 +340,33 @@
       margin-top: 5px;
       font-size: 14px;
       overflow-wrap: anywhere;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    .signal {
+      display: grid;
+      grid-template-columns: repeat(18, 1fr);
+      gap: 4px;
+      height: 34px;
+      align-items: end;
+    }
+
+    .signal span {
+      display: block;
+      border-radius: 3px 3px 0 0;
+      min-height: 7px;
+      background: linear-gradient(180deg, var(--service), color-mix(in srgb, var(--service) 45%, #071019));
+      opacity: 0.32;
+    }
+
+    .card .status.up ~ * .signal span,
+    .card.is-up .signal span {
+      opacity: 0.88;
+    }
+
+    .card.is-down .signal span {
+      background: linear-gradient(180deg, var(--bad), #5c141b);
+      opacity: 0.75;
     }
 
     .actions {
@@ -251,6 +379,7 @@
       color: var(--muted);
       font-size: 13px;
       margin-top: 20px;
+      padding-left: 2px;
     }
 
     @media (max-width: 860px) {
@@ -278,6 +407,7 @@
   <main class="shell">
     <header>
       <div>
+        <p class="eyebrow">local stack telemetry</p>
         <h1>Observability Control</h1>
         <p class="subhead">Live status and launch panel for this local stack.</p>
       </div>
@@ -365,7 +495,7 @@
 
     function renderCards() {
       servicesEl.innerHTML = services.map((service) => `
-        <article class="card" id="card-${service.id}">
+        <article class="card ${service.id}" id="card-${service.id}">
           <div class="card-head">
             <div class="title-row">
               <div class="mark">${service.mark}</div>
@@ -392,6 +522,10 @@
             </div>
           </div>
 
+          <div class="signal" aria-hidden="true">
+            ${Array.from({ length: 18 }, (_, index) => `<span style="height:${8 + ((index * 7) % 24)}px"></span>`).join("")}
+          </div>
+
           <div class="actions">
             <a class="link-button" href="${service.openUrl}" target="_blank" rel="noreferrer">Open</a>
             <button type="button" data-refresh="${service.id}">Check</button>
@@ -409,12 +543,15 @@
       state.set(service.id, next);
 
       const statusEl = document.getElementById(`status-${service.id}`);
+      const cardEl = document.getElementById(`card-${service.id}`);
       const checkedEl = document.getElementById(`checked-${service.id}`);
       const latencyEl = document.getElementById(`latency-${service.id}`);
       const resultEl = document.getElementById(`result-${service.id}`);
 
       statusEl.className = `status ${next.ok ? "up" : "down"}`;
       statusEl.textContent = next.ok ? "Up" : "Down";
+      cardEl.classList.toggle("is-up", next.ok);
+      cardEl.classList.toggle("is-down", !next.ok);
       checkedEl.textContent = labelTime(next.checkedAt);
       latencyEl.textContent = `${next.latency} ms`;
       resultEl.textContent = next.message;
@@ -423,9 +560,11 @@
 
     function setChecking(service) {
       const statusEl = document.getElementById(`status-${service.id}`);
+      const cardEl = document.getElementById(`card-${service.id}`);
       const resultEl = document.getElementById(`result-${service.id}`);
       statusEl.className = "status checking";
       statusEl.textContent = "Checking";
+      cardEl.classList.remove("is-up", "is-down");
       resultEl.textContent = "Checking";
     }
 
