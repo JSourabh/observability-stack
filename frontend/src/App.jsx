@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import Dashboard from './pages/Dashboard';
+import Infrastructure from './pages/Infrastructure';
+import AddMachineWizard from './pages/AddMachineWizard';
 
 // Placeholder for other pages to demonstrate navigation
 const PlaceholderPage = ({ title }) => (
@@ -17,7 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
-          <Route path="infrastructure" element={<PlaceholderPage title="Infrastructure Monitoring" />} />
+          <Route path="infrastructure" element={<Infrastructure />} />
           <Route path="observability" element={<PlaceholderPage title="Observability Center" />} />
           <Route path="correlation" element={<PlaceholderPage title="Unified Correlation Engine" />} />
           <Route path="service-map" element={<PlaceholderPage title="Service Map" />} />
@@ -27,7 +29,7 @@ function App() {
           <Route path="security" element={<PlaceholderPage title="Security Monitoring" />} />
           <Route path="executive" element={<PlaceholderPage title="Executive Dashboard" />} />
           <Route path="integrations" element={<PlaceholderPage title="Integrations" />} />
-          <Route path="add-machine" element={<PlaceholderPage title="Add Machine Wizard" />} />
+          <Route path="add-machine" element={<AddMachineWizard />} />
         </Route>
       </Routes>
     </Router>
