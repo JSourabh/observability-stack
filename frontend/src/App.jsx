@@ -4,6 +4,7 @@ import Layout from './components/Layout/Layout';
 import Dashboard from './pages/Dashboard';
 import Infrastructure from './pages/Infrastructure';
 import AddMachineWizard from './pages/AddMachineWizard';
+import ObservabilityCenter from './pages/ObservabilityCenter';
 
 // Placeholder for other pages to demonstrate navigation
 const PlaceholderPage = ({ title }) => (
@@ -20,7 +21,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="infrastructure" element={<Infrastructure />} />
-          <Route path="observability" element={<PlaceholderPage title="Observability Center" />} />
+          <Route path="observability" element={<ObservabilityCenter />} />
           <Route path="correlation" element={<PlaceholderPage title="Unified Correlation Engine" />} />
           <Route path="service-map" element={<PlaceholderPage title="Service Map" />} />
           <Route path="kubernetes" element={<PlaceholderPage title="Kubernetes Observability" />} />

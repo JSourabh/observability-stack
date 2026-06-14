@@ -1,31 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
 
 :root {
-  /* Premium Dark Theme (Slate/Indigo Base) */
-  --bg-color: #020617; /* Deepest Slate */
-  --bg-gradient: radial-gradient(circle at top right, #0f172a, #020617 70%);
+  /* Professional Observability Dark Theme (Grafana/Datadog inspired) */
+  --bg-color: #0d0e12; /* Deepest Charcoal / Near Black */
+  --bg-gradient: radial-gradient(circle at top, #14161c, #0d0e12);
   
-  --surface-1: rgba(15, 23, 42, 0.65);
-  --surface-2: rgba(30, 41, 59, 0.7);
-  --surface-hover: rgba(51, 65, 85, 0.8);
+  --surface-1: rgba(22, 25, 31, 0.85); /* Solid Dark Gray Surface */
+  --surface-2: rgba(32, 36, 43, 0.9);
+  --surface-hover: rgba(45, 50, 60, 0.95);
   
-  --border-color: rgba(148, 163, 184, 0.1);
-  --border-highlight: rgba(148, 163, 184, 0.25);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(255, 255, 255, 0.15);
   
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
+  --text-main: #e2e8f0; /* Crisp Off-White */
+  --text-muted: #8b949e; /* Subdued Gray for labels */
   --text-inverted: #ffffff;
   
-  /* Vibrant Accents */
-  --accent-primary: #06b6d4; /* Electric Cyan */
-  --accent-secondary: #8b5cf6; /* Vibrant Violet */
-  --accent-glow: rgba(6, 182, 212, 0.25);
+  /* Observability Accents */
+  --accent-primary: #5c6bc0; /* Professional Indigo/Purple */
+  --accent-secondary: #29b6f6; /* Clean Blue */
+  --accent-glow: rgba(92, 107, 192, 0.2);
   
-  /* Status Colors */
-  --status-healthy: #10b981; /* Emerald */
-  --status-warning: #f59e0b; /* Amber */
-  --status-critical: #ef4444; /* Rose/Red */
-  --status-info: #3b82f6; /* Blue */
+  /* Distinct Metric & Status Colors */
+  --status-healthy: #2e7d32; /* Solid Green */
+  --status-warning: #ed6c02; /* Solid Orange */
+  --status-critical: #d32f2f; /* Solid Red */
+  --status-info: #0288d1; /* Info Blue */
   
   /* Fonts */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -36,25 +36,25 @@
   --transition-normal: 0.3s ease-out;
 }
 
-/* Elegant Light Theme */
+/* Professional Observability Light Theme */
 [data-theme='light'] {
-  --bg-color: #f1f5f9;
-  --bg-gradient: radial-gradient(circle at top right, #ffffff, #e2e8f0 80%);
+  --bg-color: #f3f4f6; /* Soft Gray Background */
+  --bg-gradient: radial-gradient(circle at top, #ffffff, #f3f4f6);
   
-  --surface-1: rgba(255, 255, 255, 0.75);
-  --surface-2: rgba(255, 255, 255, 0.95);
-  --surface-hover: rgba(241, 245, 249, 0.9);
+  --surface-1: rgba(255, 255, 255, 1);
+  --surface-2: rgba(248, 250, 252, 1);
+  --surface-hover: rgba(226, 232, 240, 1);
   
-  --border-color: rgba(15, 23, 42, 0.08);
-  --border-highlight: rgba(15, 23, 42, 0.15);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --border-highlight: rgba(0, 0, 0, 0.2);
   
-  --text-main: #0f172a;
-  --text-muted: #475569;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
   --text-inverted: #ffffff;
   
-  --accent-primary: #4f46e5; /* Indigo */
-  --accent-secondary: #0ea5e9; /* Sky Blue */
-  --accent-glow: rgba(79, 70, 229, 0.15);
+  --accent-primary: #4338ca; /* Deep Purple/Indigo */
+  --accent-secondary: #0284c7; /* Ocean Blue */
+  --accent-glow: rgba(67, 56, 202, 0.15);
 }
 
 * {
