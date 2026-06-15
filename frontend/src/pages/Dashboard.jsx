@@ -1,5 +1,5 @@
-import React from 'react';
-import { Server, Activity, AlertTriangle, ShieldAlert } from 'lucide-react';
+import React, { useState } from 'react';
+import { Server, Activity, AlertTriangle, ShieldAlert, ChevronDown, Download, CheckCircle2 } from 'lucide-react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import './Dashboard.css';
 
@@ -29,6 +29,25 @@ const TOP_SERVERS_DATA = [
 ];
 
 export default function Dashboard() {
+  const [timeRange, setTimeRange] = useState('Last 24 Hours');
+  const [showTimeDropdown, setShowTimeDropdown] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [reportSuccess, setReportSuccess] = useState(false);
+
+  const handleGenerateReport = () => {
+    setIsGenerating(true);
+    setTimeout(() => {
+      setIsGenerating(false);
+      setReportSuccess(true);
+      setTimeout(() => setReportSuccess(false), 3000); // Reset after 3 seconds
+    }, 2000);
+  };
+
+  const handleTimeSelect = (range) => {
+    setTimeRange(range);
+    setShowTimeDropdown(false);
+  };
+
   return (
     <div className="dashboard-page">
       <div className="dashboard-header">
@@ -37,8 +56,40 @@ export default function Dashboard() {
           <p className="text-muted">Executive overview of infrastructure health and metrics.</p>
         </div>
         <div className="header-actions">
-          <button className="btn-secondary">Last 24 Hours</button>
-          <button className="btn-primary">Generate Report</button>
+          <div className="dropdown-container">
+            <button 
+              className="btn-secondary dropdown-trigger" 
+              onClick={() => setShowTimeDropdown(!showTimeDropdown)}
+            >
+              {timeRange} <ChevronDown size={14} />
+            </button>
+            {showTimeDropdown && (
+              <div className="dropdown-menu glass-panel">
+                {['Last 1 Hour', 'Last 6 Hours', 'Last 24 Hours', 'Last 7 Days', 'Last 30 Days'].map(range => (
+                  <button 
+                    key={range} 
+                    className={`dropdown-item ${timeRange === range ? 'active' : ''}`}
+                    onClick={() => handleTimeSelect(range)}
+                  >
+                    {range}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <button 
+            className={`btn-primary ${isGenerating ? 'loading' : ''} ${reportSuccess ? 'success' : ''}`} 
+            onClick={handleGenerateReport}
+            disabled={isGenerating}
+          >
+            {isGenerating ? (
+              <span className="flex-center"><span className="spinner-small"></span> Generating...</span>
+            ) : reportSuccess ? (
+              <span className="flex-center"><CheckCircle2 size={16} /> Ready</span>
+            ) : (
+              <span className="flex-center"><Download size={16} /> Generate Report</span>
+            )}
+          </button>
         </div>
       </div>
 
