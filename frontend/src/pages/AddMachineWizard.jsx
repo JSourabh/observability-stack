@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, ChevronRight, Server, Shield, Activity, Search, Terminal } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Server, Shield, Activity, Search, Terminal, AlertCircle } from 'lucide-react';
 import './AddMachineWizard.css';
 
 const STEPS = [
@@ -14,20 +14,66 @@ export default function AddMachineWizard() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isTesting, setIsTesting] = useState(false);
   const [testResults, setTestResults] = useState(null);
+  const [authMethod, setAuthMethod] = useState('password');
+  
+  // Basic form state
+  const [formData, setFormData] = useState({
+    hostname: '',
+    ipAddress: '',
+    username: '',
+    password: '',
+    sshKey: ''
+  });
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 5));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
 
   const runValidation = () => {
     setIsTesting(true);
-    // Mocking validation process
+    setTestResults(null);
+    
+    // Mocking validation process with basic checks
     setTimeout(() => {
-      setTestResults({
-        reachability: 'Success',
-        exporterStatus: 'Running',
-        agentStatus: 'Active',
-        metricsAvailability: 'Verified',
-      });
+      if (!formData.hostname || !formData.ipAddress || !formData.username) {
+        setTestResults({
+          success: false,
+          error: "Missing required connection details. Please go back to Step 1 & 2.",
+          reachability: 'Failed',
+          exporterStatus: 'Unknown',
+          agentStatus: 'Unknown',
+          metricsAvailability: 'Unknown',
+        });
+      } else if (authMethod === 'password' && !formData.password) {
+        setTestResults({
+          success: false,
+          error: "Authentication failed. Password is required.",
+          reachability: 'Success',
+          exporterStatus: 'Failed Auth',
+          agentStatus: 'Offline',
+          metricsAvailability: 'Denied',
+        });
+      } else if (authMethod === 'ssh' && !formData.sshKey) {
+        setTestResults({
+          success: false,
+          error: "Authentication failed. SSH Key is required.",
+          reachability: 'Success',
+          exporterStatus: 'Failed Auth',
+          agentStatus: 'Offline',
+          metricsAvailability: 'Denied',
+        });
+      } else {
+        setTestResults({
+          success: true,
+          reachability: 'Success',
+          exporterStatus: 'Running',
+          agentStatus: 'Active',
+          metricsAvailability: 'Verified',
+        });
+      }
       setIsTesting(false);
     }, 2500);
   };
@@ -62,8 +108,8 @@ export default function AddMachineWizard() {
             <div className="step-pane">
               <h2>Basic Information</h2>
               <div className="form-group">
-                <label>Hostname</label>
-                <input type="text" className="form-input" placeholder="e.g. prod-db-01" />
+                <label>Hostname <span className="text-critical">*</span></label>
+                <input type="text" name="hostname" value={formData.hostname} onChange={handleInputChange} className="form-input" placeholder="e.g. prod-db-01" />
               </div>
               <div className="form-group">
                 <label>Environment</label>
@@ -90,8 +136,8 @@ export default function AddMachineWizard() {
               <h2>Connection Details</h2>
               <div className="form-row">
                 <div className="form-group">
-                  <label>IP Address</label>
-                  <input type="text" className="form-input" placeholder="192.168.1.100" />
+                  <label>IP Address <span className="text-critical">*</span></label>
+                  <input type="text" name="ipAddress" value={formData.ipAddress} onChange={handleInputChange} className="form-input" placeholder="192.168.1.100" />
                 </div>
                 <div className="form-group">
                   <label>Port Number</label>
@@ -99,23 +145,44 @@ export default function AddMachineWizard() {
                 </div>
               </div>
               <div className="form-group">
-                <label>SSH Username</label>
-                <input type="text" className="form-input" placeholder="ubuntu" />
+                <label>SSH Username <span className="text-critical">*</span></label>
+                <input type="text" name="username" value={formData.username} onChange={handleInputChange} className="form-input" placeholder="ubuntu" />
               </div>
               <div className="form-group">
                 <label>Authentication Method</label>
                 <div className="radio-group">
                   <label className="radio-label">
-                    <input type="radio" name="auth" defaultChecked /> Password
+                    <input type="radio" name="auth" checked={authMethod === 'password'} onChange={() => setAuthMethod('password')} /> Password
                   </label>
                   <label className="radio-label">
-                    <input type="radio" name="auth" /> SSH Key
+                    <input type="radio" name="auth" checked={authMethod === 'ssh'} onChange={() => setAuthMethod('ssh')} /> SSH Key
                   </label>
                   <label className="radio-label">
-                    <input type="radio" name="auth" /> Agent Based
+                    <input type="radio" name="auth" checked={authMethod === 'agent'} onChange={() => setAuthMethod('agent')} /> Agent Based
                   </label>
                 </div>
               </div>
+              
+              {authMethod === 'password' && (
+                <div className="form-group slide-down">
+                  <label>Password <span className="text-critical">*</span></label>
+                  <input type="password" name="password" value={formData.password} onChange={handleInputChange} className="form-input" placeholder="Enter password" />
+                </div>
+              )}
+              
+              {authMethod === 'ssh' && (
+                <div className="form-group slide-down">
+                  <label>Private SSH Key <span className="text-critical">*</span></label>
+                  <textarea name="sshKey" value={formData.sshKey} onChange={handleInputChange} className="form-input" rows="4" placeholder="-----BEGIN PRIVATE KEY-----..."></textarea>
+                </div>
+              )}
+
+              {authMethod === 'agent' && (
+                <div className="info-box">
+                  <Activity size={16} className="text-info" />
+                  <span>The observability agent must be pre-installed on the target machine.</span>
+                </div>
+              )}
             </div>
           )}
 
@@ -173,25 +240,31 @@ export default function AddMachineWizard() {
 
               {testResults && (
                 <div className="validation-results">
-                  <div className="result-row success">
-                    <CheckCircle2 size={20} />
+                  {!testResults.success && (
+                    <div className="error-box mb-4">
+                      <AlertCircle size={20} />
+                      <span>{testResults.error}</span>
+                    </div>
+                  )}
+                  <div className={`result-row ${testResults.reachability === 'Success' ? 'success' : 'error'}`}>
+                    {testResults.reachability === 'Success' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
                     <span>Reachability</span>
-                    <span className="result-badge">{testResults.reachability}</span>
+                    <span className={`result-badge ${testResults.reachability === 'Success' ? 'healthy' : 'critical'}`}>{testResults.reachability}</span>
                   </div>
-                  <div className="result-row success">
-                    <CheckCircle2 size={20} />
+                  <div className={`result-row ${testResults.exporterStatus === 'Running' ? 'success' : 'error'}`}>
+                    {testResults.exporterStatus === 'Running' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
                     <span>Exporter Status</span>
-                    <span className="result-badge">{testResults.exporterStatus}</span>
+                    <span className={`result-badge ${testResults.exporterStatus === 'Running' ? 'healthy' : 'critical'}`}>{testResults.exporterStatus}</span>
                   </div>
-                  <div className="result-row success">
-                    <CheckCircle2 size={20} />
+                  <div className={`result-row ${testResults.agentStatus === 'Active' ? 'success' : 'error'}`}>
+                    {testResults.agentStatus === 'Active' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
                     <span>Agent Status</span>
-                    <span className="result-badge">{testResults.agentStatus}</span>
+                    <span className={`result-badge ${testResults.agentStatus === 'Active' ? 'healthy' : 'critical'}`}>{testResults.agentStatus}</span>
                   </div>
-                  <div className="result-row success">
-                    <CheckCircle2 size={20} />
+                  <div className={`result-row ${testResults.metricsAvailability === 'Verified' ? 'success' : 'error'}`}>
+                    {testResults.metricsAvailability === 'Verified' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
                     <span>Metrics Availability</span>
-                    <span className="result-badge">{testResults.metricsAvailability}</span>
+                    <span className={`result-badge ${testResults.metricsAvailability === 'Verified' ? 'healthy' : 'critical'}`}>{testResults.metricsAvailability}</span>
                   </div>
                 </div>
               )}
@@ -209,6 +282,7 @@ export default function AddMachineWizard() {
             <button 
               className="btn-primary" 
               onClick={currentStep === 5 ? () => alert('Machine Added Successfully!') : nextStep}
+              disabled={currentStep === 5 && (!testResults || !testResults.success)}
             >
               {currentStep === 5 ? 'Complete Setup' : 'Continue'} <ChevronRight size={16} />
             </button>
