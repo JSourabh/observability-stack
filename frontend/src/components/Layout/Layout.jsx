@@ -22,6 +22,7 @@ import './Layout.css';
 const SIDEBAR_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/' },
   { id: 'infrastructure', label: 'Infrastructure', icon: Server, path: '/infrastructure' },
+  { id: 'containers', label: 'Containers', icon: Box, path: '/containers' },
   { id: 'observability', label: 'Observability Center', icon: Activity, path: '/observability' },
   { id: 'correlation', label: 'Correlation Engine', icon: Network, path: '/correlation' },
   { id: 'service-map', label: 'Service Map', icon: MapIcon, path: '/service-map' },
