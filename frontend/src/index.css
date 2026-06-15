@@ -1,31 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
 
 :root {
-  /* Professional Observability Dark Theme (Grafana/Datadog inspired) */
-  --bg-color: #0d0e12; /* Deepest Charcoal / Near Black */
-  --bg-gradient: radial-gradient(circle at top, #14161c, #0d0e12);
+  /* Professional Observability Dark Theme (User Selected) */
+  --bg-color: #0d0e12;
+  --bg-gradient: radial-gradient(circle at top, #000000, #000000);
   
-  --surface-1: rgba(22, 25, 31, 0.85); /* Solid Dark Gray Surface */
-  --surface-2: rgba(32, 36, 43, 0.9);
-  --surface-hover: rgba(45, 50, 60, 0.95);
+  --surface-1: #16191fd9;
+  --surface-2: #20242be6;
+  --surface-hover: #2d323cf2;
   
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-highlight: rgba(255, 255, 255, 0.15);
+  --border-color: #ffffff14;
+  --border-highlight: #ffc4c426;
   
-  --text-main: #e2e8f0; /* Crisp Off-White */
-  --text-muted: #8b949e; /* Subdued Gray for labels */
-  --text-inverted: #ffffff;
+  --text-main: #e2e8f0;
+  --text-muted: #ccd0d5;
+  --text-inverted: #fff;
   
   /* Observability Accents */
-  --accent-primary: #5c6bc0; /* Professional Indigo/Purple */
-  --accent-secondary: #29b6f6; /* Clean Blue */
-  --accent-glow: rgba(92, 107, 192, 0.2);
+  --accent-primary: #e76c25;
+  --accent-secondary: #00afff;
+  --accent-glow: #cda8a82e;
   
   /* Distinct Metric & Status Colors */
-  --status-healthy: #2e7d32; /* Solid Green */
-  --status-warning: #ed6c02; /* Solid Orange */
-  --status-critical: #d32f2f; /* Solid Red */
-  --status-info: #0288d1; /* Info Blue */
+  --status-healthy: #2e7d32;
+  --status-warning: #ed6c02;
+  --status-critical: #d32f2f;
+  --status-info: #1495db;
   
   /* Fonts */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
