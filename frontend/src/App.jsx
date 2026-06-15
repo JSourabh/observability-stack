@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Infrastructure from './pages/Infrastructure';
 import AddMachineWizard from './pages/AddMachineWizard';
 import ObservabilityCenter from './pages/ObservabilityCenter';
+import AlertManagement from './pages/AlertManagement';
 
 // Placeholder for other pages to demonstrate navigation
 const PlaceholderPage = ({ title }) => (
@@ -25,7 +26,7 @@ function App() {
           <Route path="correlation" element={<PlaceholderPage title="Unified Correlation Engine" />} />
           <Route path="service-map" element={<PlaceholderPage title="Service Map" />} />
           <Route path="kubernetes" element={<PlaceholderPage title="Kubernetes Observability" />} />
-          <Route path="alerts" element={<PlaceholderPage title="Alert Management" />} />
+          <Route path="alerts" element={<AlertManagement />} />
           <Route path="aiops" element={<PlaceholderPage title="AIOps" />} />
           <Route path="security" element={<PlaceholderPage title="Security Monitoring" />} />
           <Route path="executive" element={<PlaceholderPage title="Executive Dashboard" />} />
