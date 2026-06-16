@@ -249,3 +249,69 @@
   color: var(--status-critical);
   border: 1px solid rgba(211, 47, 47, 0.3);
 }
+
+/* Modal Styles */
+.k8s-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.k8s-modal {
+  width: 400px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.k8s-modal-header {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.k8s-modal-header.delete {
+  color: var(--status-critical);
+}
+
+.k8s-modal-body {
+  margin-bottom: 24px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.k8s-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.k8s-modal-actions .btn-danger {
+  background: var(--status-critical);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.k8s-modal-actions .btn-danger:hover {
+  background: #b71c1c;
+}
+

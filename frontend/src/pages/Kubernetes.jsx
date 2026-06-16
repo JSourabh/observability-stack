@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Server, Layers, Cpu, Download, RefreshCw, LayoutDashboard, Edit2, Trash2 } from 'lucide-react';
+import { Box, Server, Layers, Cpu, Download, RefreshCw, LayoutDashboard, Edit2, Trash2, AlertTriangle, Settings } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './Kubernetes.css';
 
@@ -51,6 +51,15 @@ const DEPLOYMENTS_DATA = [
 
 export default function Kubernetes() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [modalConfig, setModalConfig] = useState({ isOpen: false, type: '', item: null, title: '' });
+
+  const openModal = (type, item, title) => {
+    setModalConfig({ isOpen: true, type, item, title });
+  };
+
+  const closeModal = () => {
+    setModalConfig({ isOpen: false, type: '', item: null, title: '' });
+  };
 
   return (
     <div className="k8s-page">
@@ -133,8 +142,8 @@ export default function Kubernetes() {
                     <div className="ns-stats">
                       <span>{ns.pods} Pods</span>
                       <div className="action-buttons" style={{ display: 'flex', gap: '8px', marginLeft: '16px' }}>
-                        <button className="icon-btn text-muted hover:text-main" onClick={() => alert('Edit ' + ns.name)}><Edit2 size={14} /></button>
-                        <button className="icon-btn text-critical" onClick={() => alert('Delete ' + ns.name)}><Trash2 size={14} /></button>
+                        <button className="icon-btn text-muted hover:text-main" onClick={() => openModal('edit', ns.name, 'Namespace')}><Edit2 size={14} /></button>
+                        <button className="icon-btn text-critical" onClick={() => openModal('delete', ns.name, 'Namespace')}><Trash2 size={14} /></button>
                       </div>
                     </div>
                   </div>
@@ -175,8 +184,8 @@ export default function Kubernetes() {
                     <td className="text-muted">{node.age}</td>
                     <td>
                       <div className="action-buttons" style={{ display: 'flex', gap: '8px' }}>
-                        <button className="icon-btn text-muted hover:text-main" onClick={() => alert('Edit ' + node.name)}><Edit2 size={16} /></button>
-                        <button className="icon-btn text-critical" onClick={() => alert('Delete ' + node.name)}><Trash2 size={16} /></button>
+                        <button className="icon-btn text-muted hover:text-main" onClick={() => openModal('edit', node.name, 'Node')}><Edit2 size={16} /></button>
+                        <button className="icon-btn text-critical" onClick={() => openModal('delete', node.name, 'Node')}><Trash2 size={16} /></button>
                       </div>
                     </td>
                   </tr>
@@ -217,8 +226,8 @@ export default function Kubernetes() {
                     <td className="text-muted">{pod.age}</td>
                     <td>
                       <div className="action-buttons" style={{ display: 'flex', gap: '8px' }}>
-                        <button className="icon-btn text-muted hover:text-main" onClick={() => alert('Edit ' + pod.name)}><Edit2 size={16} /></button>
-                        <button className="icon-btn text-critical" onClick={() => alert('Delete ' + pod.name)}><Trash2 size={16} /></button>
+                        <button className="icon-btn text-muted hover:text-main" onClick={() => openModal('edit', pod.name, 'Pod')}><Edit2 size={16} /></button>
+                        <button className="icon-btn text-critical" onClick={() => openModal('delete', pod.name, 'Pod')}><Trash2 size={16} /></button>
                       </div>
                     </td>
                   </tr>
@@ -261,14 +270,43 @@ export default function Kubernetes() {
                     <td className="text-muted">{dep.age}</td>
                     <td>
                       <div className="action-buttons" style={{ display: 'flex', gap: '8px' }}>
-                        <button className="icon-btn text-muted hover:text-main" onClick={() => alert('Edit ' + dep.name)}><Edit2 size={16} /></button>
-                        <button className="icon-btn text-critical" onClick={() => alert('Delete ' + dep.name)}><Trash2 size={16} /></button>
+                        <button className="icon-btn text-muted hover:text-main" onClick={() => openModal('edit', dep.name, 'Deployment')}><Edit2 size={16} /></button>
+                        <button className="icon-btn text-critical" onClick={() => openModal('delete', dep.name, 'Deployment')}><Trash2 size={16} /></button>
                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Overlay */}
+      {modalConfig.isOpen && (
+        <div className="k8s-modal-overlay" onClick={closeModal}>
+          <div className="k8s-modal glass-panel" onClick={(e) => e.stopPropagation()}>
+            <div className={`k8s-modal-header ${modalConfig.type === 'delete' ? 'delete' : ''}`}>
+              {modalConfig.type === 'delete' ? <AlertTriangle size={20} /> : <Settings size={20} />}
+              {modalConfig.type === 'delete' ? 'Confirm Deletion' : 'Edit Configuration'}
+            </div>
+            
+            <div className="k8s-modal-body">
+              {modalConfig.type === 'delete' ? (
+                <p>Are you sure you want to delete the {modalConfig.title.toLowerCase()} <strong>{modalConfig.item}</strong>? This action cannot be undone and may cause service disruption.</p>
+              ) : (
+                <p>You are about to modify the configuration for {modalConfig.title.toLowerCase()} <strong>{modalConfig.item}</strong>. (Form fields would be rendered here in a full implementation).</p>
+              )}
+            </div>
+            
+            <div className="k8s-modal-actions">
+              <button className="btn-secondary" onClick={closeModal}>Cancel</button>
+              {modalConfig.type === 'delete' ? (
+                <button className="btn-danger" onClick={closeModal}>Delete</button>
+              ) : (
+                <button className="btn-primary" onClick={closeModal}>Save Changes</button>
+              )}
+            </div>
           </div>
         </div>
       )}
