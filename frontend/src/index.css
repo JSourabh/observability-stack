@@ -38,23 +38,23 @@
 
 /* Professional Observability Light Theme */
 [data-theme='light'] {
-  --bg-color: #f3f4f6; /* Soft Gray Background */
-  --bg-gradient: radial-gradient(circle at top, #ffffff, #f3f4f6);
+  --bg-color: #f3f4f6;
+  --bg-gradient: radial-gradient(circle at top, #fff, #f3f4f6);
   
-  --surface-1: rgba(255, 255, 255, 1);
-  --surface-2: rgba(248, 250, 252, 1);
-  --surface-hover: rgba(226, 232, 240, 1);
+  --surface-1: #fff;
+  --surface-2: #f8fafc;
+  --surface-hover: #e2e8f0;
   
-  --border-color: rgba(0, 0, 0, 0.1);
-  --border-highlight: rgba(0, 0, 0, 0.2);
+  --border-color: #0000001a;
+  --border-highlight: #0003;
   
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --text-inverted: #ffffff;
+  --text-main: #040506;
+  --text-muted: #383c43;
+  --text-inverted: #000000;
   
-  --accent-primary: #4338ca; /* Deep Purple/Indigo */
-  --accent-secondary: #0284c7; /* Ocean Blue */
-  --accent-glow: rgba(67, 56, 202, 0.15);
+  --accent-primary: #6154f7;
+  --accent-secondary: #4bb1e5;
+  --accent-glow: #4338ca26;
 }
 
 * {

@@ -44,7 +44,7 @@
 
 .k8s-tab.active {
   background: var(--surface-2);
-  color: var(--text-inverted);
+  color: var(--text-main);
   border-color: var(--border-highlight);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
