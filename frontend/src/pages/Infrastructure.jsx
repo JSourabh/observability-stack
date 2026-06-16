@@ -1,10 +1,10 @@
-import React from 'react';
-import { Server, Box, Cloud, HardDrive, Filter, Download, MoreVertical } from 'lucide-react';
+import React, { useState } from 'react';
+import { Server, Box, Cloud, HardDrive, Filter, Download, MoreVertical, Monitor } from 'lucide-react';
 import './Infrastructure.css';
 
 const INFRA_CATEGORIES = [
   { id: 'linux', label: 'Linux Servers', count: 842, icon: Server },
-  { id: 'windows', label: 'Windows Servers', count: 120, icon: Server },
+  { id: 'windows', label: 'Windows Servers', count: 120, icon: Monitor },
   { id: 'k8s', label: 'Kubernetes', count: 45, icon: Box },
   { id: 'cloud', label: 'Cloud Instances', count: 215, icon: Cloud },
   { id: 'baremetal', label: 'Bare Metal', count: 26, icon: HardDrive },
@@ -19,6 +19,14 @@ const SERVER_LIST = [
 ];
 
 export default function Infrastructure() {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredServers = SERVER_LIST.filter(server => 
+    server.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    server.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    server.status.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="infra-page">
       <div className="infra-header">
@@ -27,8 +35,8 @@ export default function Infrastructure() {
           <p className="text-muted">Live metrics, capacity planning, and server health.</p>
         </div>
         <div className="header-actions">
-          <button className="btn-secondary"><Filter size={16} /> Filter</button>
-          <button className="btn-secondary"><Download size={16} /> Export</button>
+          <button className="btn-secondary" onClick={() => alert('Filter options coming soon')}><Filter size={16} /> Filter</button>
+          <button className="btn-secondary" onClick={() => alert('Exporting data as CSV...')}><Download size={16} /> Export</button>
         </div>
       </div>
 
@@ -47,7 +55,13 @@ export default function Infrastructure() {
       <div className="infra-content glass-panel">
         <div className="table-header">
           <h3>Server Inventory</h3>
-          <input type="text" className="table-search" placeholder="Search hostname, IP, or tags..." />
+          <input 
+            type="text" 
+            className="table-search" 
+            placeholder="Search hostname, type, or status..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
         
         <div className="table-container">
@@ -65,7 +79,7 @@ export default function Infrastructure() {
               </tr>
             </thead>
             <tbody>
-              {SERVER_LIST.map(server => (
+              {filteredServers.map(server => (
                 <tr key={server.id}>
                   <td className="font-semibold">{server.id}</td>
                   <td className="text-muted">{server.type}</td>
