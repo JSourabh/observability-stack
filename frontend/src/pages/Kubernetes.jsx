@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Server, Layers, Cpu, Download, RefreshCw, LayoutDashboard, Edit2, Trash2, AlertTriangle, Settings } from 'lucide-react';
+import { Box, Server, Layers, Cpu, Download, RefreshCw, LayoutDashboard, Edit2, Trash2, AlertTriangle, Settings, Archive } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './Kubernetes.css';
 
@@ -11,12 +11,12 @@ const CLUSTER_STATS = [
 ];
 
 const NAMESPACES = [
-  { name: 'default', pods: 12, status: 'healthy' },
-  { name: 'kube-system', pods: 28, status: 'healthy' },
-  { name: 'payment-prod', pods: 45, status: 'warning' },
-  { name: 'auth-prod', pods: 16, status: 'healthy' },
-  { name: 'inventory-prod', pods: 32, status: 'critical' },
-  { name: 'monitoring', pods: 18, status: 'healthy' },
+  { name: 'default', pods: 12, status: 'healthy', age: '12d' },
+  { name: 'kube-system', pods: 28, status: 'healthy', age: '12d' },
+  { name: 'payment-prod', pods: 45, status: 'warning', age: '10d' },
+  { name: 'auth-prod', pods: 16, status: 'healthy', age: '10d' },
+  { name: 'inventory-prod', pods: 32, status: 'critical', age: '10d' },
+  { name: 'monitoring', pods: 18, status: 'healthy', age: '5d' },
 ];
 
 const CPU_DATA = [
@@ -86,6 +86,9 @@ export default function Kubernetes() {
         </button>
         <button className={`k8s-tab ${activeTab === 'deployments' ? 'active' : ''}`} onClick={() => setActiveTab('deployments')}>
           <Layers size={18} /> Deployments
+        </button>
+        <button className={`k8s-tab ${activeTab === 'namespaces' ? 'active' : ''}`} onClick={() => setActiveTab('namespaces')}>
+          <Archive size={18} /> Namespaces
         </button>
       </div>
 
@@ -272,6 +275,44 @@ export default function Kubernetes() {
                       <div className="action-buttons" style={{ display: 'flex', gap: '8px' }}>
                         <button className="icon-btn text-muted hover:text-main" onClick={() => openModal('edit', dep.name, 'Deployment')}><Edit2 size={16} /></button>
                         <button className="icon-btn text-critical" onClick={() => openModal('delete', dep.name, 'Deployment')}><Trash2 size={16} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'namespaces' && (
+        <div className="k8s-detail-view glass-panel">
+          <div className="k8s-table-toolbar">
+             <h3>Cluster Namespaces</h3>
+             <input type="text" className="k8s-table-search" placeholder="Search namespaces..." />
+          </div>
+          <div className="k8s-table-container">
+            <table className="k8s-table">
+              <thead>
+                <tr>
+                  <th>Namespace Name</th>
+                  <th>Active Pods</th>
+                  <th>Status</th>
+                  <th>Age</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {NAMESPACES.map((ns, i) => (
+                  <tr key={i}>
+                    <td className="font-semibold">{ns.name}</td>
+                    <td>{ns.pods}</td>
+                    <td><span className={`badge ${ns.status.toLowerCase()}`}>{ns.status}</span></td>
+                    <td className="text-muted">{ns.age}</td>
+                    <td>
+                      <div className="action-buttons" style={{ display: 'flex', gap: '8px' }}>
+                        <button className="icon-btn text-muted hover:text-main" onClick={() => openModal('edit', ns.name, 'Namespace')}><Edit2 size={16} /></button>
+                        <button className="icon-btn text-critical" onClick={() => openModal('delete', ns.name, 'Namespace')}><Trash2 size={16} /></button>
                       </div>
                     </td>
                   </tr>
