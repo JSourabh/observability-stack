@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Server, Layers, Cpu, Download, RefreshCw, LayoutDashboard } from 'lucide-react';
+import { Box, Server, Layers, Cpu, Download, RefreshCw, LayoutDashboard, Edit2, Trash2 } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './Kubernetes.css';
 
@@ -132,6 +132,10 @@ export default function Kubernetes() {
                     </div>
                     <div className="ns-stats">
                       <span>{ns.pods} Pods</span>
+                      <div className="action-buttons" style={{ display: 'flex', gap: '8px', marginLeft: '16px' }}>
+                        <button className="icon-btn text-muted hover:text-main" onClick={() => alert('Edit ' + ns.name)}><Edit2 size={14} /></button>
+                        <button className="icon-btn text-critical" onClick={() => alert('Delete ' + ns.name)}><Trash2 size={14} /></button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -157,6 +161,7 @@ export default function Kubernetes() {
                   <th>Memory Usage</th>
                   <th>Status</th>
                   <th>Age</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -168,6 +173,12 @@ export default function Kubernetes() {
                     <td>{node.memory}</td>
                     <td><span className={`badge ${node.status.toLowerCase()}`}>{node.status}</span></td>
                     <td className="text-muted">{node.age}</td>
+                    <td>
+                      <div className="action-buttons" style={{ display: 'flex', gap: '8px' }}>
+                        <button className="icon-btn text-muted hover:text-main" onClick={() => alert('Edit ' + node.name)}><Edit2 size={16} /></button>
+                        <button className="icon-btn text-critical" onClick={() => alert('Delete ' + node.name)}><Trash2 size={16} /></button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -192,6 +203,7 @@ export default function Kubernetes() {
                   <th>Status</th>
                   <th>Restarts</th>
                   <th>Age</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -203,6 +215,12 @@ export default function Kubernetes() {
                     <td><span className={`badge ${pod.status.toLowerCase()}`}>{pod.status}</span></td>
                     <td className={pod.restarts > 0 ? "text-critical font-semibold" : ""}>{pod.restarts}</td>
                     <td className="text-muted">{pod.age}</td>
+                    <td>
+                      <div className="action-buttons" style={{ display: 'flex', gap: '8px' }}>
+                        <button className="icon-btn text-muted hover:text-main" onClick={() => alert('Edit ' + pod.name)}><Edit2 size={16} /></button>
+                        <button className="icon-btn text-critical" onClick={() => alert('Delete ' + pod.name)}><Trash2 size={16} /></button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -228,6 +246,7 @@ export default function Kubernetes() {
                   <th>Up-to-date</th>
                   <th>Available</th>
                   <th>Age</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -240,6 +259,12 @@ export default function Kubernetes() {
                     <td>{dep.upToDate}</td>
                     <td>{dep.available}</td>
                     <td className="text-muted">{dep.age}</td>
+                    <td>
+                      <div className="action-buttons" style={{ display: 'flex', gap: '8px' }}>
+                        <button className="icon-btn text-muted hover:text-main" onClick={() => alert('Edit ' + dep.name)}><Edit2 size={16} /></button>
+                        <button className="icon-btn text-critical" onClick={() => alert('Delete ' + dep.name)}><Trash2 size={16} /></button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
