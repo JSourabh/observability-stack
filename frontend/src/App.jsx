@@ -7,6 +7,8 @@ import AddMachineWizard from './pages/AddMachineWizard';
 import ObservabilityCenter from './pages/ObservabilityCenter';
 import AlertManagement from './pages/AlertManagement';
 import Containers from './pages/Containers';
+import ServiceMap from './pages/ServiceMap';
+import Kubernetes from './pages/Kubernetes';
 
 // Placeholder for other pages to demonstrate navigation
 const PlaceholderPage = ({ title }) => (
@@ -26,8 +28,8 @@ function App() {
           <Route path="containers" element={<Containers />} />
           <Route path="observability" element={<ObservabilityCenter />} />
           <Route path="correlation" element={<PlaceholderPage title="Unified Correlation Engine" />} />
-          <Route path="service-map" element={<PlaceholderPage title="Service Map" />} />
-          <Route path="kubernetes" element={<PlaceholderPage title="Kubernetes Observability" />} />
+          <Route path="service-map" element={<ServiceMap />} />
+          <Route path="kubernetes" element={<Kubernetes />} />
           <Route path="alerts" element={<AlertManagement />} />
           <Route path="aiops" element={<PlaceholderPage title="AIOps" />} />
           <Route path="security" element={<PlaceholderPage title="Security Monitoring" />} />
